@@ -145,7 +145,7 @@
                 <fs-radio label="A" >起点置于孔最远端 </fs-radio>
                 <fs-radio label="B" >起点置于孔最近端</fs-radio>
                 <fs-radio label="C" >优先从长边引入</fs-radio>
-                <fs-radio label="C" >优先从顶点引入</fs-radio>
+                <fs-radio label="D" >优先从顶点引入</fs-radio>
               </fs-radio-group>
             </div>
           </div>
