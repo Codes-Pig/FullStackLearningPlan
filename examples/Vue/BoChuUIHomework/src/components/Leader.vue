@@ -1,3 +1,8 @@
+<!-- 
+  🎉🎉🎉 欢迎匡大佬CodeReview 🎉🎉🎉
+  ✨✨✨ 代码江湖，高手过招，静候您的火眼金睛！✨✨✨
+  🚀🚀🚀 期待您犀利的点评，助我代码一飞冲天！🚀🚀🚀
+-->
 <template>
   <div>
     <FsButton title="设置引线" @click="panelVisible = true" />
@@ -184,15 +189,17 @@
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+
+/* 根据业务逻辑提前定义两个选项内的常量，方便公共部分抽离 */
 const GRAPHIC_OPTIONS = [
   { name: '对选中图形生效', id: 1 },
   { name: '对所有图形生效', id: 2 }
 ]
-
 const LINE_TYPE_OPTIONS = [
   { name: '直线', id: 1 },
   { name: '直线圆弧', id: 2 }
 ]
+
 defineOptions({
   name: 'Leader'
 })
@@ -223,12 +230,14 @@ const formParams = ref({
   test: 'A',
   stepper: 1
 })
-const testDisabled = computed(()=> Number(formParams.value.inGraphic) === 1)
+/* 用计算属性处理圆弧半径的显示逻辑 */
+const testDisabled = computed(() => Number(formParams.value.inGraphic) === 1)
 const props = defineProps({
   args: {
     type: Object,
     default: () => ({})
   },
+  /* 亲爱的匡匡同志，我想知道为啥写String就标黄，写string就报错 */
   size: String
 })
 const args = computed(() => ({
@@ -239,6 +248,7 @@ const args = computed(() => ({
   size: props.size,
   ...props.args
 }))
+/* 这个是用来处理Icon的？逻辑是什么，看不太懂，貌似是两种情况？(・∀・(・∀・(・∀・*) */
 const compIconFillColor = (active) => {
   return active ? 'var(--brand-color-normal)' : 'var(--text-color-secondary)'
 }
@@ -259,6 +269,7 @@ const onConfirm = (panelName: string) => {
   console.log(`点击确认了${panelName}面板`)
 }
 
+/* 提取下拉框的公共逻辑 */
 const getSelectArgs = (options, size) => ({
   disabled: false,
   'allow-create': false,
@@ -325,6 +336,7 @@ const curAttrs = computed(() => ({
   align-items: flex-start;
   width: 100%;
 }
+/* 什么时候用:deep，!important又是啥意思呐，我看模板这么用的 ┭┮﹏┭┮ */
 :deep(.radio-group){
   align-items: center !important;
 }
@@ -340,4 +352,5 @@ const curAttrs = computed(() => ({
   margin-top: 0.5rem;
   width: 100%;
 }
+/* 感谢匡小姐的CodeReview，结束后麻烦通知我，我把注释删掉哈哈哈 */
 </style>
