@@ -184,6 +184,15 @@
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+const GRAPHIC_OPTIONS = [
+  { name: '对选中图形生效', id: 1 },
+  { name: '对所有图形生效', id: 2 }
+]
+
+const LINE_TYPE_OPTIONS = [
+  { name: '直线', id: 1 },
+  { name: '直线圆弧', id: 2 }
+]
 defineOptions({
   name: 'Leader'
 })
@@ -250,7 +259,7 @@ const onConfirm = (panelName: string) => {
   console.log(`点击确认了${panelName}面板`)
 }
 
-const curArgs = computed(() => ({
+const getSelectArgs = (options, size) => ({
   disabled: false,
   'allow-create': false,
   filterable: false,
@@ -258,29 +267,13 @@ const curArgs = computed(() => ({
   addOptionAttr: {
     disabled: false
   },
-  options: [
-    { name: '直线', id: 1, labelI18nKey: '直线' },
-    { name: '直线圆弧', id: 2, labelI18nKey: '直线圆弧' }
-  ],
-  size: props.size,
+  options,
+  size,
   ...props.args
-}))
+})
 
-const graphicArgs = computed(() => ({
-  disabled: false,
-  'allow-create': false,
-  filterable: false,
-  clearable: false,
-  addOptionAttr: {
-    disabled: false
-  },
-  options: [
-    { name: '对选中图形生效', id: 1, labelI18nKey: '对选中图形生效' },
-    { name: '对所有图形生效', id: 2, labelI18nKey: '对所有图形生效' }
-  ],
-  size: props.size,
-  ...props.args
-}))
+const curArgs = computed(() => getSelectArgs(LINE_TYPE_OPTIONS, props.size))
+const graphicArgs = computed(() => getSelectArgs(GRAPHIC_OPTIONS, props.size))
 
 const curAttrs = computed(() => ({
   ...props.args,
