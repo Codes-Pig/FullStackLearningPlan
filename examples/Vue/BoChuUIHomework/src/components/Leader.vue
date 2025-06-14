@@ -1,8 +1,4 @@
-<!-- 
-  🎉🎉🎉 欢迎匡大佬CodeReview 🎉🎉🎉
-  ✨✨✨ 代码江湖，高手过招，静候您的火眼金睛！✨✨✨
-  🚀🚀🚀 期待您犀利的点评，助我代码一飞冲天！🚀🚀🚀
--->
+<!--CAD引线UI界面-->
 <template>
   <div>
     <FsButton title="设置引线" @click="panelVisible = true" />
@@ -14,6 +10,7 @@
       @closed="onClosed"
       @confirm="onConfirm"
       @closeDlg="closeDlg"
+      class="lead-line-form"
     >
       <template #content>
         <div class="fs-dlg-left">
@@ -21,12 +18,13 @@
             <div class="fs-cad-card-title">
               <fs-checkbox
                 v-model="formParams.leadIn"
+                v-bind="titleArgs"
                 title="引入线"
               />
               <fs-select
                 v-model="formParams.inGraphic"
                 v-bind="curArgs"
-                width="6.5rem"
+                width="9.5rem"
               />
             </div>
             <div class="fs-card-content" :class="{ 'disabled-content': !formParams.leadIn }">
@@ -34,50 +32,48 @@
                 <span style="color: var(--text-color-primary)">长度</span>
                 <fs-input
                   v-model="formParams.leaderInSize"
+                  v-bind="curAttrs"
                   unit="mm"
                   width="8rem"
                   :min="0.001"
                   :max="10"
-                  size="H32"
                 />
               </div>
               <div class="fs-split-H-js">
                 <span style="color: var(--text-color-primary)">圆弧半径</span>
                 <fs-input
                   v-model="formParams.arcRadius"
+                  v-bind="curAttrs"
                   :disabled="testDisabled"
                   unit="mm"
                   width="8rem"
                   :min="0.001"
                   :max="10"
-                  size="H32"
                 />
               </div>
               <div class="fs-split-H-js">
                 <span style="color: var(--text-color-primary)">角度</span>
                 <fs-input
                   v-model="formParams.leaderInAngle"
+                  v-bind="curAttrs"
                   unit="°"
                   width="8rem"
                   :min="0.001"
                   :max="10"
-                  size="H32"
                 />
               </div>
               <div class="horizontal-line" />
-              <div class="fs-split-V-js">
-                <div class="fs-checkbox-container">
-                  <fs-checkbox
-                    v-model="formParams.pointCooling"
-                    title="引入点冷却"
-                  />
-                </div>
-                <div class="fs-checkbox-container">
-                  <fs-checkbox
-                    v-model="formParams.continuousCutting"
-                    title="连割"
-                  />
-                </div>
+              <div class="fs-split-V3-js">
+                <fs-checkbox
+                  v-model="formParams.pointCooling"
+                  v-bind="curArgs"
+                  title="引入点冷却"
+                />
+                <fs-checkbox
+                  v-model="formParams.continuousCutting"
+                  v-bind="curArgs"
+                  title="连割"
+                />
               </div>
             </div>
           </div>
@@ -85,35 +81,37 @@
             <div class="fs-cad-card-title">
               <fs-checkbox
                 v-model="formParams.leadOut"
+                v-bind="titleArgs"
                 title="引出线"
               />
               <fs-select
                 v-model="formParams.outGraphic"
                 v-bind="curArgs"
-                width="6.5rem"
+                width="9.5rem"
               />
             </div>
             <div class="fs-card-content" :class="{ 'disabled-content': !formParams.leadOut }">
               <div class="fs-split-H-js">
+                <!-- style最好放到样式层级统一编写，可以用标签选择器或类继承实现 -->
                 <span style="color: var(--text-color-primary)">长度</span>
                 <fs-input
                   v-model="formParams.leaderOutSize"
+                  v-bind="curAttrs"
                   unit="mm"
                   width="8rem"
                   :min="0.001"
                   :max="10"
-                  size="H32"
                 />
               </div>
               <div class="fs-split-H-js">
                 <span style="color: var(--text-color-primary)">角度</span>
                 <fs-input
                   v-model="formParams.leaderOutAngle"
+                  v-bind="curAttrs"
                   unit="°"
                   width="8rem"
                   :min="0.001"
                   :max="10"
-                  size="H32"
                 />
               </div>
             </div>
@@ -123,35 +121,36 @@
           <div
             class="fs-cad-card"
           >
-            <div class="fs-cad-card-title">引线位置</div>
+            <div class="fs-cad-card-title fs-cad-card-title2">引线位置</div>
             <div class="fs-card-content">
               <fs-checkbox
                 v-model="formParams.leaderStartPosition"
+                v-bind="curArgs"
                 title="切断面引线起点位置"
               />
               <div class="fs-split-H-js">
-                <span style="color: var(--text-color-primary); margin-left: 1.5rem">与X轴所成角度</span>
+                <span style="color: var(--text-color-primary); margin-left: 2.2rem">与X轴所成角度</span>
                 <fs-input
                   v-model="formParams.xAngle"
+                  style="width: 12.6875rem; Height: 3rem"
+                  size="xl"
                   :disabled="!formParams.leaderStartPosition"
                   unit="°"
                   width="8rem"
                   :min="0.001"
                   :max="10"
-                  size="H32"
                 />
               </div>
               <fs-checkbox
                 v-model="formParams.changeFaceLeaderPosition"
+                v-bind="curArgs"
                 style="margin-top: 0.5rem"
                 title="更改管面孔引线位置"
               />
-              <fs-radio-group v-bind="curAttrs" v-model="formParams.test" style="margin-left: 1.5rem">
-                <fs-radio label="A" >起点置于孔最远端 </fs-radio>
-                <fs-radio label="B" >起点置于孔最近端</fs-radio>
-                <fs-radio label="C" >优先从长边引入</fs-radio>
-                <fs-radio label="D" >优先从顶点引入</fs-radio>
-              </fs-radio-group>
+              <fs-radio-group
+                v-bind="curAttrs" v-model="formParams.test" :list="RADIO_OPTIONS"
+                style="margin-left: 2.1rem"
+              />
             </div>
           </div>
           <div
@@ -162,24 +161,11 @@
               <fs-select
                 v-model="formParams.graphic"
                 v-bind="graphicArgs"
-                width="9rem"
+                width="13rem"
               />
             </div>
             <div class="fs-card-content">
-              <fs-checkbox
-                v-model="formParams.toEnclosed"
-                title="仅作用于封闭图形"
-              />
-              <fs-checkbox
-                v-model="formParams.toWire"
-                style="margin-top: 0.5rem"
-                title="对切断线生效"
-              />
-              <fs-checkbox
-                v-model="formParams.toHole"
-                style="margin-top: 0.5rem"
-                title="对孔生效"
-              />
+              <FsCheckboxGroup v-bind="args2" v-model="checkList" />
             </div>
           </div>
         </div>
@@ -188,9 +174,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
 
-/* 根据业务逻辑提前定义两个选项内的常量，方便公共部分抽离 */
+/* 根据引线业务逻辑提前定义常量，方便公共部分抽离 */
 const GRAPHIC_OPTIONS = [
   { name: '对选中图形生效', id: 1 },
   { name: '对所有图形生效', id: 2 }
@@ -199,7 +185,12 @@ const LINE_TYPE_OPTIONS = [
   { name: '直线', id: 1 },
   { name: '直线圆弧', id: 2 }
 ]
-
+const RADIO_OPTIONS = [
+  { label: 'A', title: '起点置于孔最远端' },
+  { label: 'B', title: '起点置于孔最近端' },
+  { label: 'C', title: '优先从长边引入' },
+  { label: 'D', title: '优先从顶点引入' }
+]
 defineOptions({
   name: 'Leader'
 })
@@ -237,22 +228,24 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
-  /* 亲爱的匡匡同志，我想知道为啥写String就标黄，写string就报错 */
-  size: String
+  size: {
+    type: String,
+    default: 'xl'
+  }
 })
 const args = computed(() => ({
   title: '引线',
   panelDesc: '使激光从外部平滑切入轮廓起点，可提升起割点的精度和光洁度',
   headerIcon: 'leadline',
   panelName: 'leadline',
+  size: 'xxl',
+  ...props.args
+}))
+const titleArgs = computed(() => ({
   size: props.size,
   ...props.args
 }))
-/* 这个是用来处理Icon的？逻辑是什么，看不太懂，貌似是两种情况？(・∀・(・∀・(・∀・*) */
-const compIconFillColor = (active) => {
-  return active ? 'var(--brand-color-normal)' : 'var(--text-color-secondary)'
-}
-
+/* 模板中自带的该panel的点击事件，斌斌看看修改一下 */
 const openDlg = (panelName: string) => {
   console.log(`打开了${panelName}面板`)
 }
@@ -285,14 +278,31 @@ const getSelectArgs = (options, size) => ({
 
 const curArgs = computed(() => getSelectArgs(LINE_TYPE_OPTIONS, props.size))
 const graphicArgs = computed(() => getSelectArgs(GRAPHIC_OPTIONS, props.size))
-
+const args2 = reactive({
+  list: [
+    { label: 'close', title: '仅作用于封闭图形' },
+    { label: 'cut', title: '对切断线生效' },
+    { label: 'hole', title: '对孔生效' }
+  ],
+  direction: 'vertical',
+  size: props.size
+})
+const checkList = ref(['close', '仅作用于封闭图形'])
 const curAttrs = computed(() => ({
+  direction: 'vertical',
   ...props.args,
   size: props.size
 }))
 </script>
 
 <style lang="less">
+.lead-line-form{
+  .el-dialog {
+    height: 54.25rem !important;
+  }
+}
+</style>
+<style lang="less" scoped>
 .fs-comp-icon {
   cursor: pointer;
   border: 1px solid var(--border-level-3-color);
@@ -312,31 +322,26 @@ const curAttrs = computed(() => ({
     background: var(--brand-color-light);
   }
 }
-.fs-compensate-card {
-  box-sizing: border-box;
-  width: 100%;
-  height: 6rem;
-  border: 1px dashed var(--brand-color-normal);
-  background: var(--brand-color-light);
-}
 .fs-cad-card-title{
-  gap: 7rem;
+  gap: 8px;
+  margin-top: 10px;
+  justify-content: space-between;
+  .fs-checkbox-label{
+    color: var(--text-color-primary) !important;
+    font-weight: 400 !important;
+  }
 }
 .fs-cad-card-title2{
-  gap: 5rem;
-  align-items: center
+  gap: 8px;
+  margin-top: 20px;
+  align-items: center;
  }
-.fs-split-V-js {
+.fs-split-V3-js {
   display: flex;
   align-items: flex-start;
+  flex-direction: column;
   gap: 0.5rem;
 }
-.fs-checkbox-container {
-  display: flex;
-  align-items: flex-start;
-  width: 100%;
-}
-/* 什么时候用:deep，!important又是啥意思呐，我看模板这么用的 ┭┮﹏┭┮ */
 :deep(.radio-group){
   align-items: center !important;
 }
@@ -352,5 +357,4 @@ const curAttrs = computed(() => ({
   margin-top: 0.5rem;
   width: 100%;
 }
-/* 感谢匡小姐的CodeReview，结束后麻烦通知我，我把注释删掉哈哈哈 */
 </style>
